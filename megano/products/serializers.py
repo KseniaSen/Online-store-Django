@@ -1,7 +1,7 @@
 import datetime
 from rest_framework import serializers
 
-from .models import Product, Tag, Review, Specification
+from .models import Product, Tag, Review, Specification, Category, CategoryIcon, Sale
 
 
 class ProductSpecificationSerializer(serializers.ModelSerializer):
@@ -12,7 +12,6 @@ class ProductSpecificationSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
     date = serializers.SerializerMethodField()
-
 
     class Meta:
         model = Review
@@ -34,16 +33,92 @@ class ProductSerializer(serializers.ModelSerializer):
     reviews = ReviewSerializer(many=True, required=False)
     tags = TagsProductSerializer(many=True, required=False)
     specifications = ProductSpecificationSerializer(many=True, required=False)
-
+    price = serializers.SerializerMethodField()
+    rating = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
-        fields = "__all__"
+        fields = '__all__'
 
     def get_images(self, instance):
         images = []
         images_tmp = instance.images.all()
         for image in images_tmp:
             images.append({'src': f'/media/{image.__str__()}', 'alt': image.name})
-            print(images)
         return images
+
+    def get_price(self, instance):
+        return float(instance.price)
+
+    def get_rating(self, instance):
+        return float(instance.rating)
+
+
+class ProductListSerializer(serializers.ModelSerializer):
+    images = serializers.SerializerMethodField()
+    tags = TagsProductSerializer(many=True, required=False)
+    specifications = ProductSpecificationSerializer(many=True, required=False)
+    reviews = serializers.IntegerField(source='reviews.count')
+    price = serializers.SerializerMethodField()
+    rating = serializers.SerializerMethodField()
+
+
+    class Meta:
+        model = Product
+        fields = '__all__'
+
+    def get_images(self, instance):
+        images = []
+        images_tmp = instance.images.all()
+        for image in images_tmp:
+            images.append({'src': f'/media/{image.__str__()}', 'alt': image.name})
+        return images
+
+    def get_price(self, instance):
+        return instance.price
+
+    def get_rating(self, instance):
+        return float(instance.rating)
+
+
+class CategoryIconSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CategoryIcon
+        fields = 'id', 'src', 'alt'
+
+
+class SubcategoriesCategorySerializer(serializers.ModelSerializer):
+    image = CategoryIconSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = Category
+        fields = '__all__'
+
+
+class CategoriesSerializer(serializers.ModelSerializer):
+    image = CategoryIconSerializer(many=False, required=False)
+    subcategories = SubcategoriesCategorySerializer(many=True, required=False)
+
+    class Meta:
+        model = Category
+        fields = '__all__'
+
+
+class SaleSerializer(serializers.ModelSerializer):
+    images = serializers.SerializerMethodField()
+    title = serializers.StringRelatedField()
+    href = serializers.StringRelatedField()
+    price = serializers.StringRelatedField()
+    dateFrom = serializers.DateField(format='%d.%b')
+    dateTo = serializers.DateField(format='%d.%b')
+
+    def get_images(self, instance):
+        images = []
+        images_tmp = instance.product.images.all()
+        for image in images_tmp:
+            images.append({"src": f"/media/{image.__str__()}", "alt": image.name})
+        return images
+
+    class Meta:
+        model = Sale
+        fields = '__all__'

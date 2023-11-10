@@ -21,6 +21,12 @@ class Avatar(models.Model):
     def __str__(self):
         return f'{self.profile.user.username} avatar'
 
+    def src(self):
+        return f"/media/{self.image}"
+
+    def alt(self):
+        return f"{self.profile.user.username}_avatar"
+
 
 class Profile(models.Model):
     class Meta:
@@ -29,7 +35,9 @@ class Profile(models.Model):
         ordering = ['pk']
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    phone = models.CharField(max_length=50)
+    phone = models.CharField(max_length=50, null=False, blank=True, default='')
+    fullName = models.CharField(max_length=256, null=False, blank=True, default='')
+    email = models.EmailField(max_length=128, null=False, blank=True, default='')
 
     def __str__(self):
         return f'{self.user.username} profile'

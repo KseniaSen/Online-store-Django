@@ -16,6 +16,6 @@ class IconInline(admin.StackedInline):
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ['pk', 'user', 'phone']
+    list_display = ['pk', 'user', 'phone', 'email']
     inlines = [IconInline]
     ordering = ['pk']

@@ -1,6 +1,18 @@
 from django.db import models
 
 
+class Tag(models.Model):
+    class Meta:
+        verbose_name = 'Tag'
+        verbose_name_plural = 'Tags'
+        ordering = ['pk']
+
+    name = models.CharField(max_length=50)
+
+    def __str__(self) -> str:
+        return self.name
+
+
 class Category(models.Model):
     class Meta:
         verbose_name = 'Category'
@@ -10,6 +22,8 @@ class Category(models.Model):
     title = models.CharField(max_length=128, db_index=True)
     active = models.BooleanField(default=False)
     parent = models.ForeignKey('self', on_delete=models.PROTECT, blank=True, null=True, related_name='subcategories')
+    favourite = models.BooleanField(default=False)
+    tags = models.ManyToManyField(Tag, related_name='categories')
 
     def __str__(self) -> str:
         return self.title
@@ -35,26 +49,15 @@ class CategoryIcon(models.Model):
         verbose_name_plural = 'Category icons'
         ordering = ['pk']
 
-    icon = models.ImageField(upload_to=category_icons_directory_path, max_length=500)
+    src = models.ImageField(upload_to=category_icons_directory_path, max_length=500)
     category = models.OneToOneField(Category, on_delete=models.CASCADE, related_name="image")
+    alt = models.CharField(max_length=200, null=False, blank=True)
 
     def href(self):
         return self.icon
 
     def __str__(self):
         return f'icon of {self.category.title}'
-
-
-class Tag(models.Model):
-    class Meta:
-        verbose_name = 'Tag'
-        verbose_name_plural = 'Tags'
-        ordering = ['pk']
-
-    name = models.CharField(max_length=50)
-
-    def __str__(self) -> str:
-        return self.name
 
 
 class Specification(models.Model):
@@ -93,6 +96,14 @@ class Product(models.Model):
     def __str__(self) -> str:
         return f'Product(pk={self.pk}, title={self.title!r})'
 
+    def update_rating(self):
+        reviews = self.reviews.all()
+        if reviews:
+            total_rating = sum(review.rate for review in reviews)
+            average_rating = total_rating / len(reviews)
+            self.rating = round(average_rating, 2)
+            self.save()
+
 
 def product_images_directory_path(instance: 'ProductImage', filename: str) -> str:
     return 'products/images/{pk}/{filename}'.format(
@@ -129,8 +140,31 @@ class Review(models.Model):
     author = models.CharField(max_length=100)
     email = models.EmailField()
     text = models.TextField()
-    rate = models.DecimalField(default=0, max_digits=2, decimal_places=1, null=False)
-    date = models.DateTimeField()
+    rate = models.IntegerField(blank=False, default=5)
+    date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.author}: {self.product.title}"
+
+
+class Sale(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='sales')
+    salePrice = models.DecimalField(max_digits=10, db_index=True, decimal_places=2, default=0)
+    dateFrom = models.DateField(default='')
+    dateTo = models.DateField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = 'Sale'
+        verbose_name_plural = 'Sales'
+
+    def price(self):
+
+        return self.product.price
+
+    def title(self):
+
+        return self.product.title
+
+    def href(self):
+
+        return f'/product/{self.product.pk}'

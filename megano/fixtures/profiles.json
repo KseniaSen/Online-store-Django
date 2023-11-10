@@ -1,0 +1,38 @@
+[
+    {
+        "model": "users.avatar",
+        "pk": 1,
+        "fields": {
+            "profile": 1,
+            "image": "profiles/avatars/1/1.jpg"
+        }
+    },
+    {
+        "model": "users.avatar",
+        "pk": 2,
+        "fields": {
+            "profile": 2,
+            "image": "profiles/avatars/2/1.jpeg"
+        }
+    },
+    {
+        "model": "users.profile",
+        "pk": 1,
+        "fields": {
+            "user": 1,
+            "fullName": "Admin",
+            "email": "admin@megano.ru",
+            "phone": "+ 1 111 111 11 11"
+        }
+    },
+    {
+        "model": "users.profile",
+        "pk": 2,
+        "fields": {
+            "user": 2,
+            "fullName": "Ivan Ivanov",
+            "email": "ivanov@megano.ru",
+            "phone": "+ 8 888 888 88 88"
+        }
+    }
+]

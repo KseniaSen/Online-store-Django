@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, ProductImage, Tag, Review, Specification, Category, CategoryIcon
+from .models import Product, ProductImage, Tag, Review, Specification, Category, CategoryIcon, Sale
 
 
 @admin.register(Tag)
@@ -51,13 +51,19 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(CategoryIcon)
 class CategoryIconAdmin(admin.ModelAdmin):
-    list_display = 'pk', 'icon'
-    list_display_links = 'pk',
+    list_display = ['pk', 'src', 'alt']
+    list_display_links = ['pk']
     ordering = ['pk']
 
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
     list_display = ['pk', 'author', 'date', 'product', 'rate']
+    list_display_links = ['pk']
+    ordering = ['pk']
+
+@admin.register(Sale)
+class SaleAdmin(admin.ModelAdmin):
+    list_display = ['pk', 'title']
     list_display_links = ['pk']
     ordering = ['pk']
