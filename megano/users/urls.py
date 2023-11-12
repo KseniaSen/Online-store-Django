@@ -7,6 +7,7 @@ from .views import (
     SingOutView,
     SingUpView,
 )
+app_name = 'users'
 
 
 urlpatterns = [

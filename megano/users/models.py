@@ -40,4 +40,4 @@ class Profile(models.Model):
     email = models.EmailField(max_length=128, null=False, blank=True, default='')
 
     def __str__(self):
-        return f'{self.user.username} profile'
+        return self.user.username

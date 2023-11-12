@@ -44,14 +44,15 @@ class IconInline(admin.StackedInline):
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['pk', 'title', 'parent']
+    list_display = ['pk', 'title', 'parent', 'active', 'favourite']
+    list_display_links = ['pk', 'title']
     inlines = [IconInline]
     ordering = ['pk']
 
 
 @admin.register(CategoryIcon)
 class CategoryIconAdmin(admin.ModelAdmin):
-    list_display = ['pk', 'src', 'alt']
+    list_display = ['pk', 'src']
     list_display_links = ['pk']
     ordering = ['pk']
 
@@ -62,8 +63,9 @@ class ReviewAdmin(admin.ModelAdmin):
     list_display_links = ['pk']
     ordering = ['pk']
 
+
 @admin.register(Sale)
 class SaleAdmin(admin.ModelAdmin):
-    list_display = ['pk', 'title']
+    list_display = ['pk', 'title', 'salePrice', 'dateFrom', 'dateTo']
     list_display_links = ['pk']
     ordering = ['pk']

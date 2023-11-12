@@ -1,4 +1,7 @@
+from decimal import Decimal
+
 from django.db import models
+from django.db.models import CharField
 
 
 class Tag(models.Model):
@@ -29,7 +32,7 @@ class Category(models.Model):
         return self.title
 
 
-def category_icons_directory_path(instance: "CategoryIcon", filename):
+def category_icons_directory_path(instance: "CategoryIcon", filename: str) -> str:
     if instance.category.parent:
         return 'catalog/icons/{parent}/{category}/{filename}'.format(
             parent=instance.category.parent,
@@ -53,10 +56,10 @@ class CategoryIcon(models.Model):
     category = models.OneToOneField(Category, on_delete=models.CASCADE, related_name="image")
     alt = models.CharField(max_length=200, null=False, blank=True)
 
-    def href(self):
+    def href(self) -> str:
         return self.icon
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'icon of {self.category.title}'
 
 
@@ -96,7 +99,7 @@ class Product(models.Model):
     def __str__(self) -> str:
         return f'Product(pk={self.pk}, title={self.title!r})'
 
-    def update_rating(self):
+    def update_rating(self) -> None:
         reviews = self.reviews.all()
         if reviews:
             total_rating = sum(review.rate for review in reviews)
@@ -125,7 +128,7 @@ class ProductImage(models.Model):
     def __str__(self) -> str:
         return f"/{self.image}"
 
-    def src(self):
+    def src(self) -> str:
         return self.image
 
 
@@ -143,28 +146,28 @@ class Review(models.Model):
     rate = models.IntegerField(blank=False, default=5)
     date = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.author}: {self.product.title}"
 
 
 class Sale(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='sales')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='salePrice')
     salePrice = models.DecimalField(max_digits=10, db_index=True, decimal_places=2, default=0)
-    dateFrom = models.DateField(default='')
+    dateFrom = models.DateField(blank=True, null=True)
     dateTo = models.DateField(blank=True, null=True)
 
     class Meta:
         verbose_name = 'Sale'
         verbose_name_plural = 'Sales'
 
-    def price(self):
+    def price(self) -> Decimal:
 
         return self.product.price
 
-    def title(self):
+    def title(self) -> str:
 
         return self.product.title
 
-    def href(self):
+    def href(self) -> str:
 
         return f'/product/{self.product.pk}'

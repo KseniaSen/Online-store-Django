@@ -21,7 +21,7 @@
         "model": "auth.user",
         "pk": 2,
         "fields": {
-            "password": "pbkdf2_sha256$600000$P8obXySuifBpiu0Gmmo1tZ$PjGtiYmt3YcvH4A+BPmmWrbln+eNtkQxwXjtgemaJZU=",
+            "password": "pbkdf2_sha256$600000$Y4LtMxvR76xmJujUTn2HgL$CSU/xu/OvEDnnWunQSrp5osI3kBKBd/5NLNAFYkutkg=",
             "last_login": "2023-11-10T21:13:30.117Z",
             "is_superuser": false,
             "username": "Customer",

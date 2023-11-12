@@ -61,7 +61,7 @@ class BannersList(APIView):
 
 class LimitedList(APIView):
     """Api для получения списка продуктов c ограниченным тиражом"""
-    def get(self, request: Request):
+    def get(self, request: Request) -> Response:
         products = Product.objects.filter(limited=True)[:16]
         serialized = ProductListSerializer(products, many=True)
         return Response(serialized.data)
@@ -69,7 +69,7 @@ class LimitedList(APIView):
 
 class PopularList(APIView):
     """Api для получения списка популярных продуктов"""
-    def get(self, request: Request):
+    def get(self, request: Request) -> Response:
         products = Product.objects.filter(active=True).annotate(
             count_reviews=Count('reviews')).order_by('-count_reviews')[:8]
         serialized = ProductListSerializer(products, many=True)
@@ -82,7 +82,7 @@ class ReviewCreateView(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, pk, *args, **kwargs):
+    def post(self, request, pk, *args, **kwargs) -> Response:
         product = Product.objects.get(pk=pk)
         request.data['product'] = product.pk
         request.data['date'] = datetime.now()
@@ -99,7 +99,7 @@ class ReviewCreateView(APIView):
 
 class SalesList(APIView):
     """Api для получения списка продуктов cо скидками"""
-    def get(self, request: Request):
+    def get(self, request: Request) -> Response:
         today = date.today()
         sales = Sale.objects.filter(dateFrom__lte=today, dateTo__gte=today).order_by('dateFrom')
         paginator = Paginator(sales, 4)
@@ -177,7 +177,7 @@ def sort_products(request, products):
 
 class ProductListView(APIView):
     """Api для получения списка продуктов для каталога"""
-    def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs) -> Response:
 
         products = filter_products(request)
         products = sort_products(request, products)

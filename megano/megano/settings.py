@@ -45,6 +45,8 @@ INSTALLED_APPS = [
 
     'products.apps.ProductsConfig',
     'users.apps.UsersConfig',
+    'cart.apps.CartConfig',
+    'orders.apps.OrdersConfig',
     'rest_framework'
 ]
 
@@ -140,3 +142,5 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 20
 }
+
+CART_SESSION_ID = 'cart'
