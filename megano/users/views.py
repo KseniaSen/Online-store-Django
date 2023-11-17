@@ -5,21 +5,26 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema, OpenApiResponse
 
 from .models import Profile, Avatar, User
 from .serializers import ProfileSerializer, UserSerializer
 
 
 class ProfileDetail(APIView):
-    """Api для получения профиля"""
-    def get(self, request: Request):
+    """API для получения и изменения профиля пользователя."""
+
+    serializer_class = ProfileSerializer
+
+    def get(self, request: Request) -> Response:
+        """Получение профиля пользователя."""
         user = request.user.pk
         profile = Profile.objects.get(user_id=user)
         serialized = ProfileSerializer(profile, many=False)
         return Response(serialized.data, status=status.HTTP_200_OK)
 
-    def post(self, request: Request):
-
+    def post(self, request: Request) -> Response:
+        """Изменение данных профиля пользователя."""
         user = request.user.pk
         profile = Profile.objects.get(user_id=user)
         profile.fullName = request.data.get('fullName')
@@ -33,7 +38,20 @@ class ProfileDetail(APIView):
 class PasswordUpdateView(APIView):
     """Api для изменения пароля"""
 
-    def post(self, request: Request):
+    @extend_schema(
+        responses={
+            status.HTTP_200_OK: OpenApiResponse(
+                response=None,
+                description="successful operation"
+            ),
+            status.HTTP_400_BAD_REQUEST: OpenApiResponse(
+                response=None,
+                description="Bad Request"
+            ),
+        }
+    )
+
+    def post(self, request: Request) -> Response:
         user = request.user
 
         if not user.check_password(request.data.get("currentPassword")):
@@ -54,6 +72,20 @@ class PasswordUpdateView(APIView):
 
 class AvatarUpdateView(APIView):
     """Api для изменения аватарки"""
+
+    @extend_schema(
+        responses={
+            status.HTTP_200_OK: OpenApiResponse(
+                response=None,
+                description="successful operation"
+            ),
+            status.HTTP_400_BAD_REQUEST: OpenApiResponse(
+                response=None,
+                description="Bad Request"
+            ),
+        }
+    )
+
     def post(self, request: Request) -> Response:
         new_avatar = request.data.get('avatar')
         user = request.user.pk
@@ -70,6 +102,20 @@ class AvatarUpdateView(APIView):
 
 class SingInView(APIView):
     """Api для входа на сайт"""
+
+    @extend_schema(
+        responses={
+            status.HTTP_200_OK: OpenApiResponse(
+                response=None,
+                description="successful operation"
+            ),
+            status.HTTP_500_INTERNAL_SERVER_ERROR: OpenApiResponse(
+                response=None,
+                description="unsuccessful operation"
+            ),
+        }
+    )
+
     def post(self, request: Request) -> Response:
 
         data = json.loads(list(request.data.keys())[0])
@@ -86,6 +132,16 @@ class SingInView(APIView):
 
 class SingOutView(APIView):
     """Api для выхода с сайта"""
+
+    @extend_schema(
+        responses={
+            status.HTTP_200_OK: OpenApiResponse(
+                response=None,
+                description="successful operation"
+            ),
+        }
+    )
+
     def post(self, request: Request) -> Response:
         logout(request)
         return Response(status=status.HTTP_200_OK)
@@ -93,6 +149,20 @@ class SingOutView(APIView):
 
 class SingUpView(APIView):
     """Api для регистрации на сайте"""
+
+    @extend_schema(
+        responses={
+            status.HTTP_201_CREATED: OpenApiResponse(
+                response=None,
+                description="successful creation"
+            ),
+            status.HTTP_500_INTERNAL_SERVER_ERROR: OpenApiResponse(
+                response=None,
+                description="unsuccessful operation"
+            ),
+        }
+    )
+
     def post(self, request: Request) -> Response:
         data = json.loads(list(request.data.keys())[0])
         username = data.get('username')

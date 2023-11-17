@@ -4,12 +4,14 @@ from .models import Profile, Avatar
 
 
 class AvatarSerializer(serializers.ModelSerializer):
+    """Сериализатор для модели Avatar."""
     class Meta:
         model = Avatar
         fields = ['src', 'alt']
 
 
 class ProfileSerializer(serializers.ModelSerializer):
+    """Сериализатор для модели Profile."""
     avatar = AvatarSerializer(many=False, required=False)
     
     class Meta:
@@ -18,6 +20,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    """Сериализатор для модели User."""
 
     class Meta:
         model = User

@@ -6,7 +6,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
-from django.db.models import Count
+from django.db.models import Count, QuerySet
 from datetime import datetime, date
 from urllib.parse import unquote
 
@@ -17,7 +17,10 @@ from .models import Product, Tag, Category, Review, Sale
 
 class ProductDetail(APIView):
     """Api для получения продукта по id"""
-    def get(self, request: Request, pk) -> Response:
+
+    serializer_class = ProductSerializer
+    def get(self, request: Request, pk: int) -> Response:
+
         product = Product.objects.get(pk=pk)
         serialized = ProductSerializer(product, many=False)
         return Response(serialized.data)
@@ -25,6 +28,8 @@ class ProductDetail(APIView):
 
 class TagsList(APIView):
     """Api для получения списка tags"""
+
+    serializer_class = TagsProductSerializer
     def get(self, request: Request) -> Response:
         category_pk = request.GET.get('category')
         if category_pk:
@@ -38,6 +43,9 @@ class TagsList(APIView):
 
 class CategoryList(APIView):
     """Api для получения списка categories"""
+
+    serializer_class = CategoriesSerializer
+
     def get(self, request: Request) -> Response:
         categories = Category.objects.filter(parent=None)
         data = CategoriesSerializer(categories, many=True)
@@ -46,6 +54,9 @@ class CategoryList(APIView):
 
 class BannersList(APIView):
     """Api для получения списка продуктов для баннера"""
+
+    serializer_class = ProductListSerializer
+
     def get(self, request: Request) -> Response:
         categories_favourite = Category.objects.filter(favourite=True)[:3]
         banners = []
@@ -61,6 +72,9 @@ class BannersList(APIView):
 
 class LimitedList(APIView):
     """Api для получения списка продуктов c ограниченным тиражом"""
+
+    serializer_class = ProductListSerializer
+
     def get(self, request: Request) -> Response:
         products = Product.objects.filter(limited=True)[:16]
         serialized = ProductListSerializer(products, many=True)
@@ -69,6 +83,9 @@ class LimitedList(APIView):
 
 class PopularList(APIView):
     """Api для получения списка популярных продуктов"""
+
+    serializer_class = ProductListSerializer
+
     def get(self, request: Request) -> Response:
         products = Product.objects.filter(active=True).annotate(
             count_reviews=Count('reviews')).order_by('-count_reviews')[:8]
@@ -79,10 +96,11 @@ class PopularList(APIView):
 class ReviewCreateView(APIView):
     """Api для добавления нового отзыва"""
 
+    serializer_class = ReviewSerializer
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, pk, *args, **kwargs) -> Response:
+    def post(self, request: Request, pk: int, *args, **kwargs) -> Response:
         product = Product.objects.get(pk=pk)
         request.data['product'] = product.pk
         request.data['date'] = datetime.now()
@@ -99,6 +117,9 @@ class ReviewCreateView(APIView):
 
 class SalesList(APIView):
     """Api для получения списка продуктов cо скидками"""
+
+    serializer_class = SaleSerializer
+
     def get(self, request: Request) -> Response:
         today = date.today()
         sales = Sale.objects.filter(dateFrom__lte=today, dateTo__gte=today).order_by('dateFrom')
@@ -110,8 +131,9 @@ class SalesList(APIView):
                          'lastPage': paginator.num_pages})
 
 
-def filter_products(request):
+def filter_products(request: Request) -> QuerySet[Product]:
     """Функция для фильтрации списка продуктов"""
+
     name = request.query_params.get('filter[name]')
     min_price = request.query_params.get('filter[minPrice]')
     max_price = request.query_params.get('filter[maxPrice]')
@@ -156,8 +178,9 @@ def filter_products(request):
     return products
 
 
-def sort_products(request, products):
+def sort_products(request: Request, products: QuerySet[Product]) -> QuerySet[Product]:
     """Функция для сортировки списка продуктов"""
+
     products = products.annotate(num_reviews=Count('reviews'))
     sort_by = request.GET.get('sort', 'pk')
     sort_type = request.GET.get('sortType', 'inc')
@@ -177,7 +200,10 @@ def sort_products(request, products):
 
 class ProductListView(APIView):
     """Api для получения списка продуктов для каталога"""
-    def get(self, request, *args, **kwargs) -> Response:
+
+    serializer_class = ProductListSerializer
+
+    def get(self, request: Request, *args, **kwargs) -> Response:
 
         products = filter_products(request)
         products = sort_products(request, products)

@@ -5,6 +5,7 @@ from users.models import Profile
 
 
 class Order(models.Model):
+    """Модель для хранения информации о заказах."""
     class Meta:
         verbose_name = 'Order'
         verbose_name_plural = 'Orders'
@@ -20,23 +21,24 @@ class Order(models.Model):
     address = models.TextField(max_length=255,  default='')
     products = models.ManyToManyField(Product, related_name='orders')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.pk}'
 
-    def fullName(self):
+    def fullName(self) -> str:
         return self.user.fullName
 
-    def email(self):
+    def email(self) -> str:
         return self.user.email
 
-    def phone(self):
+    def phone(self) -> str:
         return self.user.phone
 
-    def orderId(self):
+    def orderId(self) -> str:
         return f'{self.pk}'
 
 
 class ProductOrder(models.Model):
+    """Модель для хранения информации о продуктах в заказе."""
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
     count = models.PositiveIntegerField()

@@ -4,6 +4,7 @@ from .models import Product, ProductImage, Tag, Review, Specification, Category,
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
+    """Настройки панели администратора для модели Tag."""
     list_display = ['pk', 'name']
     list_display_links = ['pk', 'name']
     ordering = ['pk']
@@ -11,6 +12,7 @@ class TagAdmin(admin.ModelAdmin):
 
 @admin.register(Specification)
 class SpecificationAdmin(admin.ModelAdmin):
+    """Настройки панели администратора для модели Specification."""
     list_display = ['pk', 'name', 'value']
     list_display_links = ['pk', 'name']
     ordering = ['pk']
@@ -18,18 +20,21 @@ class SpecificationAdmin(admin.ModelAdmin):
 
 @admin.register(ProductImage)
 class ProductImageAdmin(admin.ModelAdmin):
+    """Настройки панели администратора для модели ProductImage."""
     list_display = ['pk', 'name', 'product']
     list_display_links = ['pk', 'name']
     ordering = ['pk']
 
 
 class ImageInline(admin.StackedInline):
+    """Класс для отображения изображений продукта в админке Product."""
     model = ProductImage
     extra = 1
 
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
+    """Настройки панели администратора для модели Product."""
     list_display = ['pk', 'title', 'price', 'count', 'date', 'rating', 'active']
     list_display_links = ['pk', 'title']
     search_fields = ['title', 'description']
@@ -44,6 +49,7 @@ class IconInline(admin.StackedInline):
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
+    """Настройки панели администратора для модели Category."""
     list_display = ['pk', 'title', 'parent', 'active', 'favourite']
     list_display_links = ['pk', 'title']
     inlines = [IconInline]
@@ -52,6 +58,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(CategoryIcon)
 class CategoryIconAdmin(admin.ModelAdmin):
+    """Настройки панели администратора для модели CategoryIcon."""
     list_display = ['pk', 'src']
     list_display_links = ['pk']
     ordering = ['pk']
@@ -59,6 +66,7 @@ class CategoryIconAdmin(admin.ModelAdmin):
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
+    """Настройки панели администратора для модели Review."""
     list_display = ['pk', 'author', 'date', 'product', 'rate']
     list_display_links = ['pk']
     ordering = ['pk']
@@ -66,6 +74,7 @@ class ReviewAdmin(admin.ModelAdmin):
 
 @admin.register(Sale)
 class SaleAdmin(admin.ModelAdmin):
+    """Настройки панели администратора для модели Sale."""
     list_display = ['pk', 'title', 'salePrice', 'dateFrom', 'dateTo']
     list_display_links = ['pk']
     ordering = ['pk']

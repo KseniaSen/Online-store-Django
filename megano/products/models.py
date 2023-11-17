@@ -1,10 +1,10 @@
 from decimal import Decimal
 
 from django.db import models
-from django.db.models import CharField
 
 
 class Tag(models.Model):
+    """Модель для тегов продуктов."""
     class Meta:
         verbose_name = 'Tag'
         verbose_name_plural = 'Tags'
@@ -17,6 +17,7 @@ class Tag(models.Model):
 
 
 class Category(models.Model):
+    """Модель для категорий продуктов."""
     class Meta:
         verbose_name = 'Category'
         verbose_name_plural = 'Categories'
@@ -33,6 +34,7 @@ class Category(models.Model):
 
 
 def category_icons_directory_path(instance: "CategoryIcon", filename: str) -> str:
+    """ Функция для определения пути сохранения изображений категорий."""
     if instance.category.parent:
         return 'catalog/icons/{parent}/{category}/{filename}'.format(
             parent=instance.category.parent,
@@ -47,6 +49,7 @@ def category_icons_directory_path(instance: "CategoryIcon", filename: str) -> st
 
 
 class CategoryIcon(models.Model):
+    """Модель для иконок категорий продуктов."""
     class Meta:
         verbose_name = 'Category icon'
         verbose_name_plural = 'Category icons'
@@ -64,6 +67,7 @@ class CategoryIcon(models.Model):
 
 
 class Specification(models.Model):
+    """Модель для хранения спецификаций продуктов."""
     class Meta:
         verbose_name = 'Specification'
         verbose_name_plural = 'Specifications'
@@ -77,6 +81,7 @@ class Specification(models.Model):
 
 
 class Product(models.Model):
+    """Модель продуктов"""
     class Meta:
         verbose_name = 'Product'
         verbose_name_plural = 'Products'
@@ -109,6 +114,7 @@ class Product(models.Model):
 
 
 def product_images_directory_path(instance: 'ProductImage', filename: str) -> str:
+    """Функция для определения пути сохранения изображений продуктов."""
     return 'products/images/{pk}/{filename}'.format(
         pk=instance.product.pk,
         filename=filename,
@@ -116,6 +122,7 @@ def product_images_directory_path(instance: 'ProductImage', filename: str) -> st
 
 
 class ProductImage(models.Model):
+    """Модель для изображений продуктов."""
     class Meta:
         verbose_name = 'Product image'
         verbose_name_plural = 'Product images'
@@ -133,6 +140,7 @@ class ProductImage(models.Model):
 
 
 class Review(models.Model):
+    """Модель для отзывов о продуктах."""
 
     class Meta:
         verbose_name = 'Review'
@@ -151,6 +159,7 @@ class Review(models.Model):
 
 
 class Sale(models.Model):
+    """Модель скидок на продукты"""
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='salePrice')
     salePrice = models.DecimalField(max_digits=10, db_index=True, decimal_places=2, default=0)
     dateFrom = models.DateField(blank=True, null=True)
