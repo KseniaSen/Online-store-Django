@@ -1,0 +1,192 @@
+[
+    {
+        "model": "products.category",
+        "pk": 1,
+        "fields": {
+            "title": "Смартфоны и гаджеты",
+            "active": true,
+            "parent": null,
+            "favourite": false,
+            "tags": [1, 2, 3, 4, 5, 6, 7]
+        }
+    },
+    {
+        "model": "products.category",
+        "pk": 2,
+        "fields": {
+            "title": "Смартфоны",
+            "active": true,
+            "parent": 1,
+            "favourite": true,
+            "tags": [1, 2, 3, 4]
+        }
+    },
+    {
+        "model": "products.category",
+        "pk": 3,
+        "fields": {
+            "title": "Смарт-часы",
+            "active": true,
+            "parent": 1,
+            "favourite": true,
+            "tags": [5, 6, 7]
+        }
+    },
+    {
+        "model": "products.category",
+        "pk": 4,
+        "fields": {
+            "title": "Телевизоры и видеотехника",
+            "active": true,
+            "parent": null,
+            "favourite": false,
+            "tags": [8, 9, 10]
+        }
+    },
+    {
+        "model": "products.category",
+        "pk": 5,
+        "fields": {
+            "title": "Телевизоры",
+            "active": true,
+            "parent": 4,
+            "favourite": true,
+            "tags": [8, 9]
+        }
+    },
+    {
+        "model": "products.category",
+        "pk": 6,
+        "fields": {
+            "title": "ТВ-приставки",
+            "active": true,
+            "parent": 4,
+            "favourite": false,
+            "tags": [9, 10]
+        }
+    },
+    {
+        "model": "products.category",
+        "pk": 7,
+        "fields": {
+            "title": "Проекторы",
+            "active": true,
+            "parent": 4,
+            "favourite": false,
+            "tags": [9, 10]
+        }
+    },
+    {
+        "model": "products.category",
+        "pk": 8,
+        "fields": {
+            "title": "Компьютеры и ноутбуки",
+            "active": true,
+            "parent": null,
+            "favourite": false,
+            "tags": [9, 10]
+        }
+    },
+    {
+        "model": "products.category",
+        "pk": 9,
+        "fields": {
+            "title": "Компьютеры",
+            "active": true,
+            "parent": 8,
+            "favourite": false,
+            "tags": [9, 10]
+        }
+    },
+     {
+        "model": "products.category",
+        "pk": 10,
+        "fields": {
+            "title": "Ноутбуки",
+            "active": true,
+            "parent": 8,
+            "favourite": true,
+            "tags": [9, 10]
+        }
+    },
+    {
+        "model": "products.categoryicon",
+        "pk": 1,
+        "fields": {
+            "src": "catalog/icons/Смартфоны и гаджеты/Смартфоны и гаджеты.png",
+            "category": 1
+        }
+    },
+    {
+        "model": "products.categoryicon",
+        "pk": 2,
+        "fields": {
+            "src": "catalog/icons/Смартфоны и гаджеты/Смартфоны/Смартфоны.png",
+            "category": 2
+        }
+    },
+    {
+        "model": "products.categoryicon",
+        "pk": 3,
+        "fields": {
+            "src": "catalog/icons/Смартфоны и гаджеты/Смарт-часы/Смарт-часы.png",
+            "category": 3
+        }
+    },
+     {
+        "model": "products.categoryicon",
+        "pk": 4,
+        "fields": {
+            "src": "catalog/icons/Телевизоры и видеотехника/Телевизоры и видеотехника.png",
+            "category": 4
+        }
+    },
+    {
+        "model": "products.categoryicon",
+        "pk": 5,
+        "fields": {
+            "src": "catalog/icons/Телевизоры и видеотехника/Телевизоры/Телевизоры.png",
+            "category": 5
+        }
+    },
+    {
+        "model": "products.categoryicon",
+        "pk": 6,
+        "fields": {
+            "src": "catalog/icons/Телевизоры и видеотехника/ТВ-приставки/ТВ-приставки.png",
+            "category": 6
+        }
+    },
+    {
+        "model": "products.categoryicon",
+        "pk": 7,
+        "fields": {
+            "src": "catalog/icons/Телевизоры и видеотехника/Проекторы/Проекторы.png",
+            "category": 7
+        }
+    },
+    {
+        "model": "products.categoryicon",
+        "pk": 8,
+        "fields": {
+            "src": "catalog/icons/Компьютеры и ноутбуки/Компьютеры и ноутбуки.png",
+            "category": 8
+        }
+    },
+    {
+        "model": "products.categoryicon",
+        "pk": 9,
+        "fields": {
+            "src": "catalog/icons/Компьютеры и ноутбуки/Компьютеры/Компьютеры.png",
+            "category": 9
+        }
+    },
+    {
+        "model": "products.categoryicon",
+        "pk": 10,
+        "fields": {
+            "src": "catalog/icons/Компьютеры и ноутбуки/Ноутбуки/Ноутбуки.png",
+            "category": 10
+        }
+    }
+]
